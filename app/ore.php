@@ -45,7 +45,7 @@ function route($path = null, $func_name = null)
     if ($path == null)
         return $route_list;
     else
-        if(isset($route_list[$path]))
+        if (isset($route_list[$path]))
             return $route_list[$path];
         else
             return null;
@@ -61,7 +61,7 @@ function option($key = null, $val = null)
     if ($key == null)
         return $var_list;
     else
-        if(isset($var_list[$key]))
+        if (isset($var_list[$key]))
             return $var_list[$key];
         else
             return null;
@@ -75,7 +75,9 @@ function route_regex()
     foreach ($route_list as $route => $cb) {
         $regex_list[$route] = preg_replace_callback(
             '#:([\w]+)#',
-            function ($m) { return "(?P<{$m[1]}>[^/]+)"; },
+            function ($m) {
+                return "(?P<{$m[1]}>[^/]+)";
+            },
             $route
         );
     }
@@ -109,7 +111,8 @@ function find_route()
     return $match_route;
 }
 
-function redirect($url){
+function redirect($url)
+{
     header("Location: {$url}");
     exit;
 }
@@ -120,21 +123,27 @@ function run()
     call_user_func(route($route));
 }
 
-function require_all($path){
-    $file_list = glob($path."*.php");
-    foreach($file_list as $file){
+function require_all($path)
+{
+    $file_list = glob($path . "*.php");
+    foreach ($file_list as $file) {
         require_once($file);
     }
 }
 
 route('notfound', 'notfound');
 
-if(!defined("CONTROLLER_DIR")) {
+if (!defined("CONTROLLER_DIR")) {
     define("CONTROLLER_DIR", dirname(__FILE__) . "/controller/");
 }
 require_all(CONTROLLER_DIR);
 
-if(!defined('TEMPLATE_DIR')){
+if (!defined("MODEL_DIR")) {
+    define("MODEL_DIR", dirname(__FILE__) . "/model/");
+}
+require_all(MODEL_DIR);
+
+if (!defined('TEMPLATE_DIR')) {
     define("TEMPLATE_DIR", dirname(__FILE__) . "/template/");
 }
 

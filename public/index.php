@@ -1,13 +1,12 @@
 <?php
-define("APP_DIR", dirname(dirname(__FILE__))."/app");
 require_once(dirname(dirname(__FILE__)) . "/app/ore.php");
+define("DB_DSN", 'sqlite:' . dirname(dirname(__FILE__)) . "/db.sqlite");
 
-option('HTML_TITLE', "なつかしのフレームワークです");
+option('HTML_TITLE', "なつかしの世界です");
 
-route('/', 'index');
-route('/what/your/name/:name', 'what_your_name');
-route('/redirect/sample', 'redirect');
-
+route('/', 'post_list');
+route('/post/create', 'post_create');
+route('/post/:id', 'post_show');
+route('/reset', 'post_reset');
 run();
-
 ?>
