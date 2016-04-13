@@ -15,7 +15,7 @@ function e_raw($str)
     echo $str;
 }
 
-function render($filepath, $layout = null, $params = array())
+function render($template, $layout = null, $params = array())
 {
     $params = array_merge(option(), $params);
     // ここでオートエスケープするのが流行った気がする
@@ -23,7 +23,7 @@ function render($filepath, $layout = null, $params = array())
     extract($params);
 
     ob_start();
-    include(TEMPLATE_DIR . $filepath);
+    include(TEMPLATE_DIR . $template);
     $html = ob_get_clean();
 
     if ($layout != null) {
@@ -39,33 +39,29 @@ function route($path = null, $func_name = null)
 {
     static $route_list = array();
 
-    if ($path != null && $func_name != null)
-        $route_list[$path] = $func_name;
+    if (!is_null($path) && !is_null($func_name)) $route_list[$path] = $func_name;
 
-    if ($path == null)
-        return $route_list;
-    else
-        if (isset($route_list[$path]))
-            return $route_list[$path];
-        else
-            return null;
+    if (is_null($path == null)) return $route_list;
+
+    if (isset($route_list[$path])) return $route_list[$path];
+
+    return null;
 }
 
 function option($key = null, $val = null)
 {
+    // 関数終了時にも消えない配列として$var_listを宣言
     static $var_list = array();
-
-    if ($key != null && $val != null)
-        $var_list[$key] = $val;
-
-    if ($key == null)
-        return $var_list;
-    else
-        if (isset($var_list[$key]))
-            return $var_list[$key];
-        else
-            return null;
+    // $keyと$val両方になにかはいっていれば、$keyをキーに$valを保存
+    if (!is_null($key) && !is_null($val)) $var_list[$key] = $val;
+    // 引数指定無しなら、$var_listをまるごと返す
+    if (is_null($key)) return $var_list;
+    // $keyをキーとした値がvar_listにあれば、それを返す
+    if (isset($var_list[$key])) return $var_list[$key];
+    // みつからなかったので、nullを返す
+    return null;
 }
+
 
 function route_regex()
 {
