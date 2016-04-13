@@ -138,10 +138,10 @@ if (!defined("CONTROLLER_DIR")) {
 }
 require_all(CONTROLLER_DIR);
 
-if (!defined("MODEL_DIR")) {
-    define("MODEL_DIR", dirname(__FILE__) . "/model/");
+if (!defined("DB_LIB_DIR")) {
+    define("DB_LIB_DIR", dirname(__FILE__) . "/db/");
 }
-require_all(MODEL_DIR);
+require_all(DB_LIB_DIR);
 
 if (!defined('TEMPLATE_DIR')) {
     define("TEMPLATE_DIR", dirname(__FILE__) . "/template/");

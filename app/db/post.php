@@ -5,7 +5,7 @@ function open_db()
     return new PDO(DB_DSN);
 }
 
-function model_post_load()
+function db_post_load()
 {
     $pdo = open_db();
     $stm = $pdo->prepare("SELECT * FROM post ORDER BY id");
@@ -14,7 +14,7 @@ function model_post_load()
     return $list;
 }
 
-function model_post_get($id)
+function db_post_get($id)
 {
     $pdo = open_db();
     $stm = $pdo->prepare("SELECT * FROM post WHERE id=:id");
@@ -23,7 +23,7 @@ function model_post_get($id)
     return $row;
 }
 
-function model_post_add($name, $text)
+function db_post_add($name, $text)
 {
     $pdo = open_db();
     $stm = $pdo->prepare("INSERT INTO post ('name', 'text', 'time') VALUES (:name, :text, :time)");
@@ -34,7 +34,7 @@ function model_post_add($name, $text)
     ));
 }
 
-function model_post_reset()
+function db_post_reset()
 {
     $pdo = open_db();
     $pdo->query('DROP TABLE post;');

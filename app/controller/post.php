@@ -1,7 +1,7 @@
 <?php
 function post_list()
 {
-    $list = model_post_load();
+    $list = db_post_load();
 
     render(
         'list.php',
@@ -13,7 +13,7 @@ function post_list()
 function post_show()
 {
     $id = option('id');
-    $row = model_post_get($id);
+    $row = db_post_get($id);
 
     if (!$row) {
         return notfound();
@@ -34,7 +34,7 @@ function post_create()
     // バリデーションしてないの、ホントはダメです
 
     if (strlen($name) > 0 && strlen($name) > 0) {
-        model_post_add($name, $text);
+        db_post_add($name, $text);
     }
 
     redirect('/');
@@ -42,6 +42,6 @@ function post_create()
 
 function post_reset()
 {
-    model_post_reset();
+    db_post_reset();
     redirect('/');
 }
