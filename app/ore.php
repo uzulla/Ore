@@ -41,7 +41,7 @@ function route($path = null, $func_name = null)
 
     if (!is_null($path) && !is_null($func_name)) $route_list[$path] = $func_name;
 
-    if (is_null($path == null)) return $route_list;
+    if (is_null($path)) return $route_list;
 
     if (isset($route_list[$path])) return $route_list[$path];
 
