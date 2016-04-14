@@ -130,7 +130,10 @@ function require_all($path)
 function notfound_default()
 {
     http_response_code(404);
-    render('notfound.php');
+    if(file_exists(TEMPLATE_DIR . "notfound.php"))
+        render('notfound.php');
+    else
+        echo "404 notfound";
 }
 
 route('notfound', 'notfound_default');
