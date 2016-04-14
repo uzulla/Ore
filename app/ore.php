@@ -127,7 +127,13 @@ function require_all($path)
     }
 }
 
-route('notfound', 'notfound');
+function notfound_default()
+{
+    http_response_code(404);
+    render('notfound.php');
+}
+
+route('notfound', 'notfound_default');
 
 if (!defined("CONTROLLER_DIR")) {
     define("CONTROLLER_DIR", dirname(__FILE__) . "/controller/");
