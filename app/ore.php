@@ -7,7 +7,7 @@
 
 function e($str)
 {
-    echo htmlspecialchars($str);
+    echo htmlspecialchars($str, ENT_QUOTES, "UTF-8");
 }
 
 function e_raw($str)
