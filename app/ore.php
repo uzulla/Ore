@@ -89,9 +89,9 @@ function route_regex()
 function find_route()
 {
     $uri = $_SERVER['REQUEST_URI'];
-    foreach (route_regex() as $route => $regex) {
+    foreach (route_regex() as $path => $regex) {
         if (preg_match($regex, $uri, $matches)) {
-            $match_route = $route;
+            $match_route = $path;
             break;
         }
     }
