@@ -35,6 +35,11 @@ function render($template, $layout = null, $params = array())
     echo $html;
 }
 
+/**
+ * @param string|null $path URLのpath
+ * @param string|null $func_name 実行される関数名
+ * @return array|string|null path指定時は対応するrouteのfunc_name,未指定ならすべてのrouteを返す
+ */
 function route($path = null, $func_name = null)
 {
     static $route_list = array();
@@ -66,44 +71,40 @@ function option($key = null, $val = null)
 function route_regex()
 {
     $regex_list = array();
-    $route_list = route();
-
-    foreach ($route_list as $route => $cb) {
-        $regex_list[$route] = preg_replace_callback(
-            '#:([\w]+)#',
-            function ($m) {
-                return "(?P<{$m[1]}>[^/]+)";
-            },
-            $route
-        );
+    foreach (route() as $route => $cb) {
+        $regex_list[$route] =
+            '#\A' .
+            preg_replace_callback(
+                '#:([\w]+)#',
+                function ($m) {
+                    return "(?P<{$m[1]}>[^/]+)";
+                },
+                $route
+            ) .
+            '\z#'; // ex: #\A/post/(?P<id>[^/]+)\z#
     }
-
     return $regex_list;
 }
 
 function find_route()
 {
     $uri = $_SERVER['REQUEST_URI'];
-
-    $matches = array();
-    $match_route = false;
-    $route_regex = route_regex();
-
-    foreach ($route_regex as $route => $regex) {
-        if (preg_match("#\A{$regex}\z#u", $uri, $matches)) {
+    foreach (route_regex() as $route => $regex) {
+        if (preg_match($regex, $uri, $matches)) {
             $match_route = $route;
             break;
         }
     }
-
-    if ($match_route == false) return 'notfound';
-
-    foreach ($matches as $k => $v) {
-        if (preg_match('/^[0-9]/u', $k)) continue;
-        $v = urldecode($v);
-        option($k, $v);
+    if (!isset($match_route)) {
+        return 'notfound';
     }
 
+    foreach ($matches as $k => $v) {
+        if (preg_match('/^[0-9]/u', $k)) {
+            continue;
+        }
+        option($k, urldecode($v));
+    }
     return $match_route;
 }
 
@@ -130,7 +131,7 @@ function require_all($path)
 function notfound_default()
 {
     http_response_code(404);
-    if(file_exists(TEMPLATE_DIR . "notfound.php"))
+    if (file_exists(TEMPLATE_DIR . "notfound.php"))
         render('notfound.php');
     else
         echo "404 notfound";
