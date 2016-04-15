@@ -68,7 +68,7 @@ function option($key = null, $val = null)
 }
 
 
-function route_regex()
+function path_regex()
 {
     $regex_list = array();
     foreach (route() as $route => $cb) {
@@ -86,16 +86,16 @@ function route_regex()
     return $regex_list;
 }
 
-function find_route()
+function find_match_path()
 {
     $uri = $_SERVER['REQUEST_URI'];
-    foreach (route_regex() as $path => $regex) {
+    foreach (path_regex() as $path => $regex) {
         if (preg_match($regex, $uri, $matches)) {
-            $match_route = $path;
+            $match_path = $path;
             break;
         }
     }
-    if (!isset($match_route)) {
+    if (!isset($match_path)) {
         return 'notfound';
     }
 
@@ -105,7 +105,7 @@ function find_route()
         }
         option($k, urldecode($v));
     }
-    return $match_route;
+    return $match_path;
 }
 
 function redirect($url)
@@ -116,7 +116,7 @@ function redirect($url)
 
 function run()
 {
-    $path = find_route();
+    $path = find_match_path();
     call_user_func(route($path));
 }
 
