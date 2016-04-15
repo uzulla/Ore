@@ -116,8 +116,8 @@ function redirect($url)
 
 function run()
 {
-    $route = find_route();
-    call_user_func(route($route));
+    $path = find_route();
+    call_user_func(route($path));
 }
 
 function require_all($path)
